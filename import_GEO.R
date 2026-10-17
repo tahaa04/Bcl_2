@@ -10,9 +10,9 @@ dir.create("data/raw", recursive = TRUE, showWarnings = FALSE)
 dir.create("results", recursive = TRUE, showWarnings = FALSE)
 
 
-# ------------------------------------------------------------
-# 1. Load GSE20711
-# ------------------------------------------------------------
+
+#  Load GSE20711
+
 
 gse <- getGEO(
   "GSE20711",
@@ -23,9 +23,7 @@ gse <- getGEO(
 eset <- gse[[1]]
 
 
-# ------------------------------------------------------------
-# 2. Get expression data and sample metadata
-# ------------------------------------------------------------
+
 
 expr <- Biobase::exprs(eset)
 
@@ -33,9 +31,7 @@ meta <- Biobase::pData(eset) %>%
   rownames_to_column("sample")
 
 
-# ------------------------------------------------------------
-# 3. Extract subtype information
-# ------------------------------------------------------------
+
 
 # Find all metadata columns that contain "subtypege:"
 subtype_cols <- names(meta)[
@@ -90,9 +86,7 @@ subtype_data <- tibble(
 )
 
 
-# ------------------------------------------------------------
-# 4. Find BCL2 probes
-# ------------------------------------------------------------
+#find bcl2 probes
 
 bcl2_probes <- AnnotationDbi::select(
   hgu133plus2.db,
@@ -107,9 +101,7 @@ bcl2_probe_ids <- intersect(
 )
 
 
-# ------------------------------------------------------------
-# 5. Extract BCL2 expression
-# ------------------------------------------------------------
+#bcl expression
 
 bcl2_expr <- expr[
   bcl2_probe_ids,
@@ -126,9 +118,7 @@ bcl2_mean <- colMeans(
 )
 
 
-# ------------------------------------------------------------
-# 6. Make one clean analysis table
-# ------------------------------------------------------------
+
 
 data <- tibble(
   sample = names(bcl2_mean),
@@ -157,9 +147,7 @@ write_csv(
 )
 
 
-# ------------------------------------------------------------
-# 7. Plot
-# ------------------------------------------------------------
+#Plot
 
 p <- ggplot(
   data,
